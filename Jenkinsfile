@@ -29,7 +29,6 @@ node {
 
 // demoing a second agent
 node('mac') {
-<<<<<<< HEAD
     sh 'ls'
     sh 'rm -rf *'
     unstash 'everything'
@@ -37,23 +36,6 @@ node('mac') {
 }
 
 // parallel integration testing
-=======
-    // on windows use: bat 'dir'
-    sh 'ls'
-
-    // on windows use: bat 'del /S /Q *'
-    sh 'rm -rf *'
-
-    unstash 'everything'
-
-    // on windows use: bat 'dir'
-    sh 'ls'
-}
-
-//parallel integration testing
->>>>>>> 57f1ed0b1a1f44509550a822835f700d35892260
-stage 'Browser Testing'
-parallel chrome: {
     runTests("Chrome")
 }, firefox: {
     runTests("Firefox")
@@ -61,7 +43,6 @@ parallel chrome: {
     runTests("Safari")
 }
 
-<<<<<<< HEAD
 def runTests(browser){
     node {
         sh 'rm -rf'
@@ -69,20 +50,6 @@ def runTests(browser){
         sh "npm run test-single-run -- --browsers ${browser}"
         step([$class: 'JUnitResultArchiver', 
           testResults: 'test-results/**/test-results.xml'])
-=======
-def runTests(browser) {
-    node {
-        // on windows use: bat 'del /S /Q *'
-        sh 'rm -rf *'
-
-        unstash 'everything'
-
-        // on windows use: bat "npm run test-single-run -- --browsers ${browser}"
-        sh "npm run test-single-run -- --browsers ${browser}"
-
-        step([$class: 'JUnitResultArchiver', 
-              testResults: 'test-results/**/test-results.xml'])
->>>>>>> 57f1ed0b1a1f44509550a822835f700d35892260
     }
 }
 
@@ -90,7 +57,6 @@ node {
     notify("Deploy to staging?")
 }
 
-<<<<<<< HEAD
 //inte i en node för att låsa flödet tills att någon kommer och säger OK
 input 'Deploy to staging?'
 
@@ -103,21 +69,6 @@ node {
     sh "echo '<h1>${env.BUILD_DISPLAY_NAME}</h1>' >> app/index.html"
     
     // deploy to a docker container mapped to port 3000
-=======
-input 'Deploy to staging?'
-
-// limit concurrency so we don't perform simultaneous deploys
-// and if multiple pipelines are executing, 
-// newest is only that will be allowed through, rest will be canceled
-stage name: 'Deploy to staging', concurrency: 1
-node {
-    // write build number to index page so we can see this update
-    // on windows use: bat "echo '<h1>${env.BUILD_DISPLAY_NAME}</h1>' >> app/index.html"
-    sh "echo '<h1>${env.BUILD_DISPLAY_NAME}</h1>' >> app/index.html"
-    
-    // deploy to a docker container mapped to port 3000
-    // on windows use: bat 'docker-compose up -d --build'
->>>>>>> 57f1ed0b1a1f44509550a822835f700d35892260
     sh 'docker-compose up -d --build'
     
     notify 'Solitaire Deployed!'
@@ -127,21 +78,9 @@ node {
 
 
 
-<<<<<<< HEAD
 def notify(status){
     emailext (
       to: "albin.blent@gmail.com",
-=======
-
-
-
-
-
-
-def notify(status){
-    emailext (
-      to: "wesmdemos@gmail.com",
->>>>>>> 57f1ed0b1a1f44509550a822835f700d35892260
       subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
       body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
         <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
