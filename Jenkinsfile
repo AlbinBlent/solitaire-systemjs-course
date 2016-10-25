@@ -36,6 +36,7 @@ node('mac') {
 }
 
 // parallel integration testing
+patallel chrome: {
     runTests("Chrome")
 }, firefox: {
     runTests("Firefox")
